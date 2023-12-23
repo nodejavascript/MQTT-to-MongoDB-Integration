@@ -133,7 +133,7 @@ const main = async () => {
         newMessage
           .save()
           .then(() => {
-            NODE_ENV != 'local' && console.log('Message inserted successfully')
+            NODE_ENV === 'local' && console.log('Message inserted successfully')
           })
           .catch((err) => {
             console.error('Error inserting message:', err)
@@ -152,7 +152,7 @@ const main = async () => {
       newMessage
         .save()
         .then(() => {
-          NODE_ENV != 'local' && console.log('Message inserted successfully')
+          NODE_ENV === 'local' && console.log('Message inserted successfully')
         })
         .catch((err) => {
           console.error('Error inserting message:', err)
