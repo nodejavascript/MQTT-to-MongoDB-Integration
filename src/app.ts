@@ -1,5 +1,5 @@
-import mqtt, { MqttClient } from 'mqtt'
 import mongoose from 'mongoose'
+import mqtt, { MqttClient } from 'mqtt'
 import 'dotenv/config'
 
 const {
@@ -51,9 +51,7 @@ messageSchema.index({ deviceId: 1 })
 
 const deviceSchema = new mongoose.Schema(
   {
-    deviceId: { type: String, unique: true },
-    deviceName: String,
-    topics: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Topic' }]
+    deviceName: { type: String, unique: true }
   },
   {
     timestamps: true, // This will add createdAt and updatedAt fields
@@ -70,6 +68,7 @@ interface MessageObject {
 const connectMqtt = (): Promise<MqttClient> => {
   return new Promise((resolve, reject) => {
     const mqttClient: MqttClient = mqtt.connect(MQTT_URL as string, {
+      clean: true,
       username: MQTT_USERNAME,
       password: MQTT_PASSWORD,
       clientId: MQTT_CLIENT
@@ -101,12 +100,12 @@ const main = async () => {
       messageToSave = message.toString()
     }
 
-    let device = await Device.findOne({ deviceId: collectionName })
+    let device = await Device.findOne({ deviceName: collectionName })
 
     if (!device) {
       device = new Device({
-        deviceId: collectionName,
-        deviceName: collectionName // You can set a default name or get it from somewhere else
+        deviceName: collectionName,
+        levels
       })
 
       try {
@@ -134,7 +133,7 @@ const main = async () => {
         newMessage
           .save()
           .then(() => {
-            console.log('Message inserted successfully')
+            NODE_ENV != 'local' && console.log('Message inserted successfully')
           })
           .catch((err) => {
             console.error('Error inserting message:', err)
@@ -153,7 +152,7 @@ const main = async () => {
       newMessage
         .save()
         .then(() => {
-          console.log('Message inserted successfully')
+          NODE_ENV != 'local' && console.log('Message inserted successfully')
         })
         .catch((err) => {
           console.error('Error inserting message:', err)
