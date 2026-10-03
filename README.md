@@ -1,5 +1,11 @@
 # MQTT-to-MongoDB-Integration
 
+A device that reports a reading is only useful if the reading is kept. This subscribes to every topic on an MQTT broker and writes each message into MongoDB, deciding the collection and the document from the topic itself — so a new device streaming to the broker needs no new code here.
+
+It connects with the broker URL, username, password and client ID given in the environment, and the screenshots in this repository (`devices.png`, `collections.png`, `analog.png`) show messages arriving and the documents they became.
+
+---
+
 This application parses the topic and message to determine the appropriate MongoDB collection and document to create or update on the fly
 
 Here's a brief overview of how it works:
